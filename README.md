@@ -1,4 +1,4 @@
 chat.io
 =======
 
-chat app using 
+chat app using socket.io
