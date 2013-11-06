@@ -8,7 +8,7 @@ $(document).ready(function () {
     $("a[href='#emit']").click(function() {
         var data = $(this).data();
         var event = data.event;
-        delete date.event;
+        delete data.event;
         socket.emit(event, data);
     })
 
