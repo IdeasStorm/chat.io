@@ -5,6 +5,7 @@ chat app using socket.io
 
 Running The App
 ===============
+* first install the latest nodejs release, or update it from here http://davidwalsh.name/upgrade-nodejs
 * first `cd` into the app folder
 * type `npm install`
 * you can start the project by running `npm start`
