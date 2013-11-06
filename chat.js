@@ -1,20 +1,33 @@
 var Conversation = require("./models/conversation");
-function ChatBackend() {
+var User = require("./models/user");
+function ChatBackend(io) {
     var self = this;
     //private members
-    var server;
     var users = [];
     var conversations = [];
-    var middlewares = [];
 
-    this.startSocket = function(socket) {
-        var user = new User(socket, self);
-        users[user.id] = user;
+    this.start= function() {
+        io.sockets.on('connection', function(socket){
+            var user = new User(socket, self);
+            users[user.id] = user;
+        });
+    }
+
+    this.broadcast = function(channel, data) {
+        io.broadcast.emit(channel, data);
     }
 
     this.getConversation = function(id) {
-        conversations[id] = conversations[id] || new Conversation(id, self);
         return conversations[id];
+    }
+
+    this.getUser = function(id) {
+        return users[id];
+    }
+
+    this.createConversation = function(id) {
+        if (conversations[id]) throw "conversation already exists";
+        return conversations[id] = new Conversation(id, self);
     }
 }
 

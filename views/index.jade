@@ -1,6 +1,15 @@
 extends layout
 
 block content
-	div
-		a(id='sender')='Send a Message'
-		ul(id='receiver')
+    div
+        ='conversation: '
+        input(id='conversation', value= 'newbies')
+    div
+        ='username: '
+        input(id='username')
+    div
+        input(id='invited_user')
+        button(id='invite')='Invite User'
+    div
+        button(id='sender')='Send a Message'
+        ul(id='receiver')

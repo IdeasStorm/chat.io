@@ -40,9 +40,8 @@ server.listen( port);
 
 //Setup Socket.IO
 var io = io.listen(server);
-var chatBackend = new chat.Backend();
-io.sockets.on('connection', chatBackend.startSocket);
-
+var chatBackend = new chat.Backend(io);
+chatBackend.start();
 
 ///////////////////////////////////////////
 //              Routes                   //
