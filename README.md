@@ -13,3 +13,16 @@ Running The App
 Notice
 ======
 make sure you've installed the latest nodejs version, if you haven't plz update it from here [http://davidwalsh.name/upgrade-nodejs]
+
+Web Interface Helpers
+=====================
+Emitter
+-------
+just use this notation to emit an event to the server
+
+```html
+<a href="#emit" data-arg1="val1" data-arg2="val2" ... > Emit Event </a>
+```
+
+*Example*
+<a href="#emit" data-message="hello world !" data-conversation_id="newbies" ... > Emit Event </a>

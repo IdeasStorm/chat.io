@@ -5,6 +5,13 @@ $(document).ready(function () {
 
     var socket = io.connect();
 
+    $("a[href='#emit']").click(function() {
+        var data = $(this).data();
+        var event = data.event;
+        delete date.event;
+        socket.emit(event, data);
+    })
+
     $('#sender').bind('click', function () {
         socket.emit('message', {
             message: 'Message Sent on ' + new Date(),
