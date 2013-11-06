@@ -26,4 +26,6 @@ just use this notation to emit an event to the server
 ```
 
 *Example*
-<a href="#emit" data-message="hello world !" data-conversation_id="newbies" ... > Emit Event </a>
+```html
+<a href="#emit" data-message="hello world !" data-conversation_id="newbies" > Emit Event </a>
+```
