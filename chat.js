@@ -9,7 +9,9 @@ function ChatBackend(io) {
     this.start= function() {
         io.sockets.on('connection', function(socket){
             var user = new User(socket, self);
+            socket.broadcast.emit('new_user', {username: user.id});
             users[user.id] = user;
+            users.push(user);
         });
     }
 
@@ -23,6 +25,10 @@ function ChatBackend(io) {
 
     this.getUser = function(id) {
         return users[id];
+    }
+
+    this.getUsers = function() {
+        return users.map(function(value) {return {username: value.id}});
     }
 
     this.createConversation = function(id) {

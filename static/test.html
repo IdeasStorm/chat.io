@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+        <link rel="stylesheet" href="css/bootstrap.min.css" />
+        <link rel="stylesheet" href="css/bootstrap-responsive.min.css" />
+        <link rel="stylesheet" href="css/docs.css" />
+        <link rel="stylesheet" href="css/prettify.css" />
+    </head>
+    <body data-spy="scroll" data-target=".bs-docs-sidebar" data-twttr-rendered="true">
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="navbar-inner">
+            <div class="container">
+              <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              <a class="brand" href="./index.html">Chat.IO</a>
+              <div class="nav-collapse collapse">
+                <ul class="nav">
+                  <li class="">
+                    <a href="./index.html">Home</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <header class="jumbotron subhead">
+          <div class="container">
+            <h1>Chat.IO</h1>
+            <p class="lead">RealTime encrypted chat client using socket.io
+          </p></div>
+        </header>
+
+        <!-- Add your site or application content here -->
+        <div class="container">
+            <div class="row">
+                <div class="span3 bs-docs-sidebar">
+                    <ul class="nav nav-list bs-docs-sidenav" id="user_list" data-bind="foreach: users">
+                        <li class=""><a data-bind="text: username" ><i class="icon-chevron-right"></i> Overview</a></li>
+                    </ul>
+                </div>
+                <div class="span9">
+                    <section id="chat">
+                        <div class="tabbable tabs-above">
+                            <label> Conversation: </label><input type="text" data-bind="value: new_conversation_field">
+                            <label> Password: </label><input type="password" data-bind="value: new_conversation_password">
+                            <ul class="nav nav-tabs" >
+                                <!-- ko foreach: conversations -->
+                                <li class=""><a href="#B" data-toggle="tab" data-bind="text: id, attr:{href: '#'+id}">Section 1</a></li>
+                                <!-- /ko -->
+                                <li><a href="#new_tab" data-bind="click: $root.addConversation">+</a></li>
+                            </ul>
+                            <div class="tab-content" data-bind="foreach: conversations">
+                                <div class="tab-pane" id="A" data-bind="attr: {id: id}">
+                                    <pre data-bind="text: body">I'm in Section A.</pre>
+                                    <input type="text" data-bind="value: $root.new_message_field">
+                                    <button data-bind="click: $root.sendMessage">Send</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <a href="https://github.com/ideasstorm/chat.io"><img style="position: absolute; top: 0; right: 0; border: 0;z-index:10001" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+        
+
+        <script src="http://code.jquery.com/jquery-1.9.0.js"></script>
+        <script src="/socket.io/socket.io.js" ></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/knockout.js"></script>
+        <script src="js/prettify.js"></script>
+        <script src="js/knockout-bootstrap.js"></script>
+        <script src="js/forge.min.js"></script>
+        <script src="js/aes.js"></script>
+        <script src="js/script.js"></script>
+
+        <script type="text/html" id="popoverTemplate">
+            <button class="close pull-right" type="button" data-dismiss="popover">&times</button>
+            Hey I am some content in A popover
+        </script>
+
+        <script type="text/html" id="popoverBindingTemplate">
+            <button class="close pull-right" type="button" data-dismiss="popover">&times</button>
+            <form>
+                <label>Popover Binding Header</label>
+                <input type="text" data-bind="value: popoverBindingHeader, valueUpdate:'afterkeydown'" />
+            </form>
+        </script>
+    </body>
+</html>

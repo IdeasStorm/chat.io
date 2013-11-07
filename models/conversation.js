@@ -1,11 +1,10 @@
 var crypto = require('crypto');
 
 function Conversation(name, _system, users) {
+    var self = this;
     users = users || [];
     this.id = name;
     var system = _system;
-    var middlewares = [];
-    var shared_key = "default_shared_key";
 
     this.publish = function(data, sender) {
         console.log('publishing ' + data);
@@ -16,10 +15,14 @@ function Conversation(name, _system, users) {
     }
 
     this.addUser = function(user) {
-        if (typeof user != 'string')
+        if (typeof user != 'string') {
             users.push(user);
-        else
+            user.addConversation(self);
+        }
+        else {
             users.push(system.getUser(user));
+            system.getUser(user).addConversation(self);
+        }
     }
 
     this.contains = function(user) {

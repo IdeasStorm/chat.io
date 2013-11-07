@@ -1,36 +1,98 @@
 /* Author: YOUR NAME HERE
  */
 
+function Conversation(id, password) {
+    this.id = id;
+    this.password = password;
+    this.messages = [];
+}
+
 $(document).ready(function () {
+    var ExampleViewModel = function () {
+        var self = this;
+        var socket = io.connect('http://localhost');
 
-    var socket = io.connect();
-
-    $("a[href='#emit']").click(function() {
-        var data = $(this).data();
-        var event = data.event;
-        delete data.event;
-        socket.emit(event, data);
-    })
-
-    $('#sender').bind('click', function () {
-        socket.emit('message', {
-            message: 'Message Sent on ' + new Date(),
-            conversation_id: $('#conversation').val()
+        var _conversations = []; //cached index
+        socket.on('new_user', function(data) {
+            var found = false;
+            $(self.users()).each(function(i,v) {
+                if (v.username == data.username)
+                    found = true;
+            })
+            if (!found) self.users.push(data);
         });
-    });
 
-    $('#invite').bind('click', function() {
-        socket.emit('invite', {
-            conversation_id: $('#conversation').val(),
-            user_id: $('#invited_user').val()
-        });
-    })
+        socket.on('user_list', function(data) {
+            self.users(data.users);
+        })
 
-    socket.on('message', function (data) {
-        $('#receiver').append('<li>' + data.message + '</li>');
-    });
+        socket.on('conversation_list', function(data) {
+            self.conversations(data.conversations);
+        })
 
-    socket.on('name_change', function (data) {
-        $('#username').val(data.name);
+        socket.on('new_conversation', function(data){
+            var conversation = {
+                id: data.conversation_id,
+                body: ko.observable(''),
+                password: self.new_conversation_password()
+            }
+            self.conversations.push(conversation);
+            _conversations[data.conversation_id] = self.conversations().length-1;
+            self.clearConversationsForm();
+        })
+
+        socket.on('message', function(data) {
+            var id = _conversations[data.conversation_id];
+            var conversation = self.conversations()[id];
+            conversation.body(conversation.body() + '\n' + self.decrypt(data.message, conversation.password));
+            self.new_message_field("");
+        })
+
+        self.encrypt = function(message, passphrase) {
+            var r = CryptoJS.AES.encrypt(message,passphrase);
+            return r.toString();
+        }
+        self.decrypt = function(message, passphrase) {
+            var r = CryptoJS.AES.decrypt(message,passphrase);
+            return CryptoJS.enc.Utf8.stringify(r).toString();
+        }
+
+        self.clearConversationsForm = function() {
+            self.new_conversation_field("");
+            self.new_conversation_password("");
+        }
+
+        self.users = ko.observableArray([]);
+        self.conversations = ko.observableArray([{id: 'asd', body: ko.observable('asd')}]);
+        self.new_conversation_field = ko.observable('newbies');
+        self.new_conversation_password = ko.observable('');
+        self.new_message_field = ko.observable('');
+
+        self.addConversation = function() {
+            socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
+        }
+
+        self.sendMessage = function(conversation) {
+            socket.emit('message', {
+                conversation_id: conversation.id,
+                message: self.encrypt(self.new_message_field(), conversation.password)
+            })
+        }
+
+        self.alerts = ko.observableArray([
+            {'message': 'Here is an Error', 'priority': 'error'},
+            {'message': 'Here is a Warning', 'priority': 'warning'},
+            {'message': 'Here is a Success', 'priority': 'success'},
+            {'message': 'Here is some Info', 'priority': 'info'}
+        ]);
+    };
+
+    $(function(){
+        // make code pretty
+        window.prettyPrint && prettyPrint();
+
+        var viewModel = new ExampleViewModel();
+
+        ko.applyBindings(viewModel);
     });
 });

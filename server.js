@@ -60,7 +60,6 @@ server.get('/', function(req,res){
   });
 });
 
-
 //A Route for Creating a 500 Error (Useful to keep around)
 server.get('/500', function(req, res){
     throw new Error('This is a 500 Error');
