@@ -3,6 +3,7 @@
   "description": "Encypted Chat Client",
   "author": "Muhammad Al-Syrwan <mhdsyrwan@gmail.com>, Mohammed Al-Juboori <mhdaljobory@gmail.com>, Yaman Al-tereh <yamman05@gmail.com>",
   "version": "0.0.1",
+  "repository": "http://github.com/ideasstorm/chat.io",
   "dependencies": {
     "connect": "1.8.5",
     "express": "2.5.8",
