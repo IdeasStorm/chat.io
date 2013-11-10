@@ -3,7 +3,16 @@ var connect = require('connect')
     , express = require('express')
     , io = require('socket.io')
     , port = (process.env.PORT || 8081)
+    , passport = require('passport')
     , chat = require('./chat');
+
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.findOne({ username: username, password: password }, function (err, user) {
+            done(err, user);
+        });
+    }
+));
 
 //Setup Express
 var server = express.createServer();

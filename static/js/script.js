@@ -62,14 +62,23 @@ $(document).ready(function () {
             self.new_conversation_password("");
         }
 
+        socket.on('name_change', function(data) {
+            self.username(data.username);
+        })
+
         self.users = ko.observableArray([]);
         self.conversations = ko.observableArray([{id: 'asd', body: ko.observable('asd')}]);
         self.new_conversation_field = ko.observable('newbies');
         self.new_conversation_password = ko.observable('');
         self.new_message_field = ko.observable('');
+        self.username = ko.observable('');
 
         self.addConversation = function() {
             socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
+        }
+
+        self.changename = function() {
+            socket.emit('name_change', {username: self.username()})
         }
 
         self.sendMessage = function(conversation) {
