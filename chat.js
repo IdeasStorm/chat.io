@@ -1,5 +1,6 @@
-var Conversation = require("./models/conversation");
-var User = require("./models/user");
+var Conversation = require("./models/conversation")
+    , passportSocketIo = require("passport.socketio");
+var User = require("./models/user_model");
 function ChatBackend(io) {
     var self = this;
     //private members
@@ -12,6 +13,40 @@ function ChatBackend(io) {
             socket.broadcast.emit('new_user', {username: user.id});
             users[user.id] = user;
             users.push(user);
+        });
+
+        io.sockets.on('close', function (socket) {
+            var sess = socket.handshake.session;
+            var user = sess.user;
+            if (user)
+                user.setOffline();
+        });
+
+        io.sockets.on("connection", function(socket){
+            console.log("user connected: ", socket.handshake.user.name);
+
+        });
+
+        io.sockets.on('connection', function (socket) {
+            var user = socket.handshake.user;
+            if (user) {
+                console.log('user is logged in');
+                user.setOnline(socket, self);
+
+                socket.log.info(
+                    'a socket with sessionID'
+                    , socket.handshake.sessionID
+                    , 'connected'
+                );
+
+                // REMOVE ME
+                socket.on('set value', function (val) {
+                    sess.reload(function () {
+                        sess.value = val;
+                        sess.touch().save();
+                    });
+                });
+            }
         });
     }
 
