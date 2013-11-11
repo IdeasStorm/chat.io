@@ -15,6 +15,6 @@ block content
                 // /ko
             .tab-content(data-bind="foreach: conversations")
                 .tab-pane#A(data-bind="attr: {id: id}")
+                    input(type="text", data-bind="value: $root.new_message_field", class="col-md-11")
+                    button(data-bind="click: $root.sendMessage", class="col-md-1") Send
                     pre(data-bind="text: body") I'm in Section A.
-                    input(type="text", data-bind="value: $root.new_message_field")
-                    button(data-bind="click: $root.sendMessage") Send
