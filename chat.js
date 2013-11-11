@@ -23,14 +23,14 @@ function ChatBackend(io) {
         });
 
         io.sockets.on("connection", function(socket){
-            console.log("user connected: ", socket.handshake.user.name);
+
 
         });
 
         io.sockets.on('connection', function (socket) {
             var user = socket.handshake.user;
             if (user) {
-                console.log('user is logged in');
+                console.log("user connected: ", socket.handshake.user.username);
                 user.setOnline(socket, self);
 
                 socket.log.info(

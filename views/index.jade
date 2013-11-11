@@ -1,15 +1,20 @@
 extends layout
 
 block content
-    div
-        ='conversation: '
-        input(id='conversation', value= 'newbies')
-    div
-        ='username: '
-        input(id='username')
-    div
-        input(id='invited_user')
-        button(id='invite')='Invite User'
-    div
-        button(id='sender')='Send a Message'
-        ul(id='receiver')
+   //div(data-bind="foreach: conversations")
+        div#A(data-bind="attr: {id: id}")
+            pre(data-bind="text: body") I'm in Section A.
+            input(data-bind="value: $root.new_message_field")
+            button(data-bind="click: $root.sendMessage") Send
+    section#chat
+        .tabbable.tabs-above
+            ul.nav.nav-tabs
+                // ko foreach: conversations
+                li
+                    a(href="#B", data-toggle="tab", data-bind="text: id, attr:{href: '#'+id}")
+                // /ko
+            .tab-content(data-bind="foreach: conversations")
+                .tab-pane#A(data-bind="attr: {id: id}")
+                    input(type="text", data-bind="value: $root.new_message_field", class="col-md-11")
+                    button(data-bind="click: $root.sendMessage", class="col-md-1") Send
+                    pre(data-bind="text: body") I'm in Section A.

@@ -5,7 +5,6 @@ var connect = require('connect')
     , passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy
     , MemoryStore = connect.middleware.session.MemoryStore
-    , parseCookie = connect.utils.parseCookie
     , chat = require('./chat')
     , User = require('./models/user_model')
     , passportSocketIo = require("passport.socketio")
