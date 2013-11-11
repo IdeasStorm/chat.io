@@ -1,3 +1,6 @@
 body {
+    background-image: url('/img/messenger-icon.png');
+    background-repeat: no-repeat;
+    background-position: 100% -30px;
     padding-top: 60px;
 }
