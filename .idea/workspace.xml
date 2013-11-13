@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d0b430c-5b25-41af-8b0b-04d3d9395e5b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/js/jquery.min.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/layout.jade" afterPath="$PROJECT_DIR$/views/layout.jade" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user_model.js" afterPath="$PROJECT_DIR$/models/user_model.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="chat.io.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -99,9 +96,9 @@
       <file leaf-file-name="layout.jade" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/views/layout.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="62" column="42" selection-start="2215" selection-end="2215" vertical-scroll-proportion="0.36486486" vertical-offset="1008" max-vertical-offset="1512">
+            <state line="78" column="8" selection-start="3023" selection-end="3023" vertical-scroll-proportion="0.6351351" vertical-offset="1216" max-vertical-offset="1512">
               <folding>
-                <marker date="1384372255385" expanded="true" signature="2657:2855" placeholder="{...}" />
+                <marker date="1384372774743" expanded="true" signature="2657:2855" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -549,9 +546,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/layout.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="62" column="42" selection-start="2215" selection-end="2215" vertical-scroll-proportion="0.36486486" vertical-offset="1008" max-vertical-offset="1512">
+        <state line="78" column="8" selection-start="3023" selection-end="3023" vertical-scroll-proportion="0.6351351" vertical-offset="1216" max-vertical-offset="1512">
           <folding>
-            <marker date="1384372255385" expanded="true" signature="2657:2855" placeholder="{...}" />
+            <marker date="1384372774743" expanded="true" signature="2657:2855" placeholder="{...}" />
           </folding>
         </state>
       </provider>
