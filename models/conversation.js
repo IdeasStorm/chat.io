@@ -1,28 +1,20 @@
 var crypto = require('crypto');
+var User = require('./user_model');
 
-function Conversation(name, _system, users) {
+function Conversation(name, system, users) {
     var self = this;
     users = users || [];
     this.id = name;
-    var system = _system;
 
     this.publish = function(data, sender) {
-        console.log('publishing ' + data);
-        //var cipherdata = decrypt(data);
         users.forEach(function(user) {
             user.publish({message: data, conversation_id: name});
         })
     }
 
     this.addUser = function(user) {
-        if (typeof user != 'string') {
-            users.push(user);
-            user.addConversation(self);
-        }
-        else {
-            users.push(system.getUser(user));
-            system.getUser(user).addConversation(self);
-        }
+        users.push(user);
+        user.addConversation(self);
     }
 
     this.contains = function(user) {

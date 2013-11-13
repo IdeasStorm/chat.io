@@ -6,6 +6,7 @@ function ChatBackend(io) {
     //private members
     var users = [];
     var conversations = [];
+    this.io = io;
 
     this.start= function() {
         io.sockets.on('connection', function(socket){
