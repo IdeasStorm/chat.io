@@ -7,11 +7,110 @@ function Conversation(id, password) {
     this.messages = [];
 }
 
+var KeySotre = (function() {
+
+    setCert = function(username, cert) {
+        localStorage.setItem(username+'Cert', cert);
+    };
+
+    return {
+        getCert: function(username, callback) {
+            var cert = localStorage.getItem(username+'Cert');
+            if (cert == null) {
+                socket.emit('cert_request', {username: username});
+                socket.on('cert_response', function(data) {
+                    setCert(username, data.cert);
+                    callback(data.cert);
+                });
+            } else {
+                callback(cert);
+            }
+        },
+
+        setPrivateKey: function(privateKeyPem) {
+            localStorage.setItem('privateKey', privateKeyPem);
+        },
+
+        setPublicKey: function(publicKeyPem) {
+            localStorage.setItem('publicKey', publicKeyPem);
+        },
+
+        setPublicKey: function(username, publicKeyPem) {
+            localStorage.setItem(username+'Pk', publicKeyPem);
+        },
+
+        getPrivateKey: function() {
+            var privateKeyPem = localStorage.getItem('privateKey');
+            if (privateKeyPem == null) {
+                Encryption.generateKeypair();
+                return localStorage.getItem('privateKey');
+            }
+            else {
+                return privateKeyPem
+            }
+        },
+
+        getPublicKey: function() {
+            var publicKeyPem = localStorage.getItem('publicKey');
+            if (publicKeyPem == null) {
+                Encryption.generateKeypair();
+                return localStorage.getItem('publicKey');
+            }
+            else {
+                return publicKeyPem;
+            }
+        },
+
+        getPublicKey: function(username) {
+            //TODO to Syrwan
+            //   if localStorage.getItem(username+'Pk') == null
+            //      get publicKey from Cert
+            return localStorage.getItem(username+'Pk');
+        }
+
+    }
+});
+
+var Encryption = (function() {
+
+    var pki = forge.pki;
+    var keypair = null;
+    var publicKeyPem = null;
+    var privateKeyPem = null;
+
+    return {
+        generateKeypair: function() {
+            var publicKey = KeySotre.getPublicKey();
+            var privateKey = KeyStore.getPrivateKey();
+            if (publicKey == null || privateKey == null) {
+                // get rsa
+                var rsa = pki.rsa;
+                // generate an RSA key pair
+                keypair = rsa.generateKeyPair({bits: 2048, e: 0x10001});
+                // Get Pem of public/private key
+                publicKeyPem = pki.publicKeyToPem(keypair.publicKey);
+                privateKeyPem = pki.privateKeyToPem(keypair.privateKey);
+                // Store pem in local storage
+                KeySotre.setPublicKey(publicKeyPem);
+                KeySotre.setPrivateKey(privateKeyPem);
+            }
+        },
+
+        encrypt: function(message) {
+            var publicKeyPem = KeySotre.getPublicKey();
+            var publicKey = pki.publicKeyFromPem(publicKeyPem);
+            return publicKey.encrypt(message);
+        },
+
+        decrypt: function(encrypted) {
+            var privateKeyPem = KeySotre.getPrivateKey();
+            var privateKey = pki.privateKeyFromPem(privateKeyPem);
+            return privateKey.decrypt(encrypted);
+        }
+    }
+});
+
 $(document).ready(function () {
-    // get rsa
-    var rsa = forge.pki.rsa;
-    // generate an RSA key pair
-    var keypair = rsa.generateKeyPair({bits: 2048, e: 0x10001});
 
     var ExampleViewModel = function () {
         var self = this;
@@ -60,15 +159,6 @@ $(document).ready(function () {
         self.decrypt = function(message, passphrase) {
             var r = CryptoJS.AES.decrypt(message,passphrase);
             return CryptoJS.enc.Utf8.stringify(r).toString();
-        }
-
-        self.encryptRSA = function(message, publicKey) {
-            if (publicKey == null) return "";
-            return publicKey.encrypt(message);
-        }
-        self.decryptRSA = function(encrypted, privateKey) {
-            if (privateKey == null) return "";
-            return privateKey.decrypt(encrypted);
         }
 
         self.createMD5Hash = function(message) {
