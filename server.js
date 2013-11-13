@@ -87,14 +87,7 @@ chatBackend.start();
 /////// ADD ALL YOUR ROUTES HERE  /////////
 
 server.get('/', function(req,res){
-  res.render('index.jade', {
-    locals : { 
-              title : 'Chat'
-             ,description: 'Your Page Description'
-             ,author: 'Your Name'
-             ,analyticssiteid: 'XXXXXXX' 
-            }
-  });
+  res.render('index.jade');
 });
 
 //A Route for Creating a 500 Error (Useful to keep around)
@@ -103,17 +96,12 @@ server.get('/500', function(req, res){
 });
 
 server.get('/register', function(req, res) {
-    res.render('register.jade', {
-        locals : {
-            title : 'Registeration Page'
-            ,description: 'Your Page Description'
-            ,author: 'Your Name'
-            ,analyticssiteid: 'XXXXXXX'
-        }
-    });
+    res.render('register.jade');
 });
 
 server.post('/register', function(req, res) {
+    console.log(req.body.username);
+    console.log(req.body.password);
     User.register(new User({ username : req.body.username }), req.body.password, function(err, account) {
         if (err) {
             return res.render('register.jade', { account : account });
@@ -128,15 +116,7 @@ server.post('/login', passport.authenticate('local', { failureRedirect: '/login'
 });
 
 server.get('/login', function(req, res) {
-    res.render('login.jade', {
-        user : req.user,
-        locals : {
-            title : 'Login Page'
-            ,description: 'Your Page Description'
-            ,author: 'Your Name'
-            ,analyticssiteid: 'XXXXXXX'
-        }
-    });
+    res.render('login.jade');
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
