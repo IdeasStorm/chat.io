@@ -3,6 +3,9 @@ var mongoose = require('mongoose'),
     passportLocalMongoose = require('passport-local-mongoose');
 
 var User = new Schema({});
+User.post('init', function() {
+    this.conversations = [];
+})
 
 User.plugin(passportLocalMongoose);
 
@@ -33,8 +36,12 @@ model.prototype.setOffline = function () {
 
 
 model.prototype.addConversation = function(c) {
-    //TODO: add logic
-    //conversations.push(c);
+    this.conversations.push(c);
+}
+
+
+model.prototype.getConversations =  function() {
+    return this.conversations.map(function(c) {return {id: c.conversation_id}});
 }
 
 model.prototype.onOnline = function () {
@@ -42,7 +49,12 @@ model.prototype.onOnline = function () {
     var system = this.system;
     var self = this;
 
+    system.addUser(self);
+
     socket.emit('name_change', {username: self.username});
+    socket.broadcast.emit('new_user', {username: self.id});
+    socket.emit('user_list', {users: system.getUsers()});
+    socket.emit('conversation_list', {conversations: self.getConversations()})
 
     socket.on('message', function (data) {
         var conversation_id = data.conversation_id;
@@ -60,7 +72,6 @@ model.prototype.onOnline = function () {
     socket.on('invite', function (data) {
         var conversation_id = data.conversation_id;
         var user_id = data.user_id;
-        var cipher_passphrase = data.passphrase;
         var conversation = system.getConversation(conversation_id);
         if (conversation && conversation.contains(self)) {
             User.findOne({username: user_id}, function(err, user){

@@ -9,23 +9,10 @@ function ChatBackend(io) {
     this.io = io;
 
     this.start= function() {
-        io.sockets.on('connection', function(socket){
-            var user = new User(socket, self);
-            socket.broadcast.emit('new_user', {username: user.id});
-            users[user.id] = user;
-            users.push(user);
-        });
-
         io.sockets.on('close', function (socket) {
-            var sess = socket.handshake.session;
-            var user = sess.user;
+            var user = socket.handshake.user;
             if (user)
                 user.setOffline();
-        });
-
-        io.sockets.on("connection", function(socket){
-
-
         });
 
         io.sockets.on('connection', function (socket) {
@@ -63,8 +50,16 @@ function ChatBackend(io) {
         return users[id];
     }
 
+    this.addUser = function(user) {
+        users[user.id] = user;
+    }
+
+    this.removeUser = function(user) {
+        delete users[user.id];
+    }
+
     this.getUsers = function() {
-        return users.map(function(value) {return {username: value.id}});
+        return users.map(function(value) {return {username: value.username}});
     }
 
     this.createConversation = function(id) {
