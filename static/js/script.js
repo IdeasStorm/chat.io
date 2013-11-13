@@ -17,7 +17,7 @@ var KeySotre = (function() {
         getCert: function(username, callback) {
             var cert = localStorage.getItem(username+'Cert');
             if (cert == null) {
-                socket.emit('cert_request', {username: username});
+                socket.emit('cert_request', {username: username, publicKey: KeySotre.getPublicKey(username)});
                 socket.on('cert_response', function(data) {
                     if (username == data.username) {
                         setCert(username, data.cert);
@@ -29,37 +29,22 @@ var KeySotre = (function() {
             }
         },
 
-        setPrivateKey: function(privateKeyPem) {
-            localStorage.setItem('privateKey', privateKeyPem);
-        },
-
-        setPublicKey: function(publicKeyPem) {
-            localStorage.setItem('publicKey', publicKeyPem);
+        setPrivateKey: function(username, privateKeyPem) {
+            localStorage.setItem(username+'Prk', privateKeyPem);
         },
 
         setPublicKey: function(username, publicKeyPem) {
             localStorage.setItem(username+'Pk', publicKeyPem);
         },
 
-        getPrivateKey: function() {
-            var privateKeyPem = localStorage.getItem('privateKey');
+        getPrivateKey: function(username) {
+            var privateKeyPem = localStorage.getItem(username+'Prk');
             if (privateKeyPem == null) {
-                Encryption.generateKeypair();
-                return localStorage.getItem('privateKey');
+                Encryption.generateKeypair(username);
+                return localStorage.getItem(username+'Prk');
             }
             else {
                 return privateKeyPem
-            }
-        },
-
-        getPublicKey: function() {
-            var publicKeyPem = localStorage.getItem('publicKey');
-            if (publicKeyPem == null) {
-                Encryption.generateKeypair();
-                return localStorage.getItem('publicKey');
-            }
-            else {
-                return publicKeyPem;
             }
         },
 
@@ -81,8 +66,8 @@ var Encryption = (function() {
     var privateKeyPem = null;
 
     return {
-        generateKeypair: function() {
-            var publicKey = KeySotre.getPublicKey();
+        generateKeypair: function(username) {
+            var publicKey = KeySotre.getPublicKey(username);
             var privateKey = KeyStore.getPrivateKey();
             if (publicKey == null || privateKey == null) {
                 // get rsa
@@ -93,19 +78,17 @@ var Encryption = (function() {
                 publicKeyPem = pki.publicKeyToPem(keypair.publicKey);
                 privateKeyPem = pki.privateKeyToPem(keypair.privateKey);
                 // Store pem in local storage
-                KeySotre.setPublicKey(publicKeyPem);
+                KeySotre.setPublicKey(username, publicKeyPem);
                 KeySotre.setPrivateKey(privateKeyPem);
             }
         },
 
-        encrypt: function(message) {
-            var publicKeyPem = KeySotre.getPublicKey();
+        encrypt: function(message, publicKeyPem) {
             var publicKey = pki.publicKeyFromPem(publicKeyPem);
             return publicKey.encrypt(message);
         },
 
-        decrypt: function(encrypted) {
-            var privateKeyPem = KeySotre.getPrivateKey();
+        decrypt: function(encrypted, privateKeyPem) {
             var privateKey = pki.privateKeyFromPem(privateKeyPem);
             return privateKey.decrypt(encrypted);
         }
