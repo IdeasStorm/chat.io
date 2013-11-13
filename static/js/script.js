@@ -68,7 +68,7 @@ var Encryption = (function() {
     return {
         generateKeypair: function(username) {
             var publicKey = KeySotre.getPublicKey(username);
-            var privateKey = KeyStore.getPrivateKey();
+            var privateKey = KeyStore.getPrivateKey(username);
             if (publicKey == null || privateKey == null) {
                 // get rsa
                 var rsa = pki.rsa;
@@ -79,7 +79,7 @@ var Encryption = (function() {
                 privateKeyPem = pki.privateKeyToPem(keypair.privateKey);
                 // Store pem in local storage
                 KeySotre.setPublicKey(username, publicKeyPem);
-                KeySotre.setPrivateKey(privateKeyPem);
+                KeySotre.setPrivateKey(username, privateKeyPem);
             }
         },
 
