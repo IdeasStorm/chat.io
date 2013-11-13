@@ -8,6 +8,11 @@ function Conversation(id, password) {
 }
 
 $(document).ready(function () {
+    // get rsa
+    var rsa = forge.pki.rsa;
+    // generate an RSA key pair
+    var keypair = rsa.generateKeyPair({bits: 2048, e: 0x10001});
+
     var ExampleViewModel = function () {
         var self = this;
         var socket = io.connect('http://localhost');
@@ -55,6 +60,15 @@ $(document).ready(function () {
         self.decrypt = function(message, passphrase) {
             var r = CryptoJS.AES.decrypt(message,passphrase);
             return CryptoJS.enc.Utf8.stringify(r).toString();
+        }
+
+        self.encryptRSA = function(message, publicKey) {
+            if (publicKey == null) return "";
+            return publicKey.encrypt(message);
+        }
+        self.decryptRSA = function(encrypted, privateKey) {
+            if (privateKey == null) return "";
+            return privateKey.decrypt(encrypted);
         }
 
         self.clearConversationsForm = function() {
