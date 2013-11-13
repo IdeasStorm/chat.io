@@ -31,6 +31,12 @@ model.prototype.setOffline = function () {
     this.socket = null;
 }
 
+
+model.prototype.addConversation = function(c) {
+    //TODO: add logic
+    //conversations.push(c);
+}
+
 model.prototype.onOnline = function () {
     var socket = this.socket;
     var system = this.system;
