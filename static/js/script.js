@@ -19,8 +19,10 @@ var KeySotre = (function() {
             if (cert == null) {
                 socket.emit('cert_request', {username: username});
                 socket.on('cert_response', function(data) {
-                    setCert(username, data.cert);
-                    callback(data.cert);
+                    if (username == data.username) {
+                        setCert(username, data.cert);
+                        callback(data.cert);
+                    }
                 });
             } else {
                 callback(cert);
