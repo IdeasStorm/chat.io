@@ -83,6 +83,27 @@ model.prototype.onOnline = function () {
             socket.emit('error', {message:  'Insufficient Privileges !'})
         }
     })
+
+    var certs = [];
+    socket.on('cert_request', function(data) {
+        if (certs[data.username]) { /// there's a cached certificate
+            data.cert = certs[data.username];
+            socket.emit('cert_response', data);
+        } else {
+            User.findOne({username: data.username}, function(err, user) { // let's find the user
+                if (user.isOnline()) { // if the user is online
+                    user.send('cert_request', data); // request his cert
+                    user.on('cert_response', function(certdata){ // waiting for response
+                        certs[data.username] = certdata.cert;
+                        socket.emit('cert_response', certdata); // sending the cert back to the user requesting it
+                    })
+                }else {
+                    data.error = 'user is not online';
+                    socket.emit('cert_response', data) // sending the error back
+                }
+            })
+        }
+    })
 }
 
 module.exports = model;

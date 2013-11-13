@@ -9,7 +9,7 @@ function Conversation(id, password) {
 
 var KeySotre = (function() {
 
-    setCert = function(username, cert) {
+    var setCert = function(username, cert) {
         localStorage.setItem(username+'Cert', cert);
     };
 
