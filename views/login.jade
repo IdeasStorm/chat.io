@@ -1,11 +1,13 @@
+extends layout
+
 block content
     h2 Log In
-    form(action="/login",method="post")
-        div
+    form(action="/login", method="post")
+        div.form-group
             label Username
-            input(type="text",name="username")
-        div
+            input(type="text", name="username", class="form-control")
+        div.form-group
             label Password
-            input(type="password",name="password")
+            input(type="password", name="password", class="form-control")
         div
-            input(type="submit",value="Log In")
+            input(type="submit", value="Log In", class="btn btn-default")

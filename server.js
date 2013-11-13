@@ -128,7 +128,15 @@ server.post('/login', passport.authenticate('local', { failureRedirect: '/login'
 });
 
 server.get('/login', function(req, res) {
-    res.render('login.jade', { user : req.user });
+    res.render('login.jade', {
+        user : req.user,
+        locals : {
+            title : 'Login Page'
+            ,description: 'Your Page Description'
+            ,author: 'Your Name'
+            ,analyticssiteid: 'XXXXXXX'
+        }
+    });
 });
 
 //The 404 Route (ALWAYS Keep this as the last route)
