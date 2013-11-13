@@ -1,11 +1,6 @@
 extends layout
 
 block content
-   //div(data-bind="foreach: conversations")
-        div#A(data-bind="attr: {id: id}")
-            pre(data-bind="text: body") I'm in Section A.
-            input(data-bind="value: $root.new_message_field")
-            button(data-bind="click: $root.sendMessage") Send
     section#chat
         .tabbable.tabs-above
             ul.nav.nav-tabs

@@ -1,11 +1,13 @@
+extends layout
+
 block content
     h2 Register
-    form(action="/register",method="post")
-        div
+    form(action="/register", method="post")
+        div.form-group
             label Username
-            input(type="text",name="username")
-        div
+            input(type="text", name="username", class="form-control")
+        div.form-group
             label Password
-            input(type="password",name="password")
+            input(type="password", name="password", class="form-control")
         div
-            input(type="submit",value="Register")
+            input(type="submit", value="Register", class="btn btn-default")
