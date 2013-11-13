@@ -71,6 +71,12 @@ $(document).ready(function () {
             return privateKey.decrypt(encrypted);
         }
 
+        self.createMD5Hash = function(message) {
+            var md = forge.md.md5.create();
+            md.update(message);
+            return md.digest().toHex();
+        }
+
         self.clearConversationsForm = function() {
             self.new_conversation_field("");
             self.new_conversation_password("");
