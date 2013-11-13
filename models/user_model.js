@@ -42,6 +42,8 @@ model.prototype.onOnline = function () {
     var system = this.system;
     var self = this;
 
+    socket.emit('name_change', {username: self.username});
+
     socket.on('message', function (data) {
         var conversation_id = data.conversation_id;
         var conversation = system.getConversation(conversation_id);
