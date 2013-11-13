@@ -1,7 +1,3 @@
-//region PRIVATE STATIC MEMBERS
-    var last_id = 0;
-//endregion
-
 function User(socket, system) {
     var self = this;
     var conversations = [];
@@ -10,6 +6,8 @@ function User(socket, system) {
     //endregion
 
     this.id = User.generateId();
+    users.push(self);
+    users[this.id] = self;
 
     //region PUBLIC MEMBERS
         this.publish = function(data) {
@@ -55,6 +53,11 @@ function User(socket, system) {
         }
     })
 }
+
+//region PRIVATE STATIC MEMBERS
+var last_id = 0;
+var users = [];
+//endregion
 
 //region STATIC METHODS
     User.generateId = function() {
