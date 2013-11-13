@@ -89,7 +89,7 @@ chatBackend.start();
 server.get('/', function(req,res){
   res.render('index.jade', {
     locals : { 
-              title : 'Your Page Title'
+              title : 'Chat'
              ,description: 'Your Page Description'
              ,author: 'Your Name'
              ,analyticssiteid: 'XXXXXXX' 
@@ -103,7 +103,14 @@ server.get('/500', function(req, res){
 });
 
 server.get('/register', function(req, res) {
-    res.render('register.jade', { });
+    res.render('register.jade', {
+        locals : {
+            title : 'Registeration Page'
+            ,description: 'Your Page Description'
+            ,author: 'Your Name'
+            ,analyticssiteid: 'XXXXXXX'
+        }
+    });
 });
 
 server.post('/register', function(req, res) {
