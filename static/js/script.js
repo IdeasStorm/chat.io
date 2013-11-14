@@ -68,7 +68,7 @@ var Encryption = (function() {
     return {
         generateKeypair: function(username) {
             var publicKey = KeySotre.getPublicKey(username);
-            var privateKey = KeyStore.getPrivateKey();
+            var privateKey = KeyStore.getPrivateKey(username);
             if (publicKey == null || privateKey == null) {
                 // get rsa
                 var rsa = pki.rsa;
@@ -79,7 +79,7 @@ var Encryption = (function() {
                 privateKeyPem = pki.privateKeyToPem(keypair.privateKey);
                 // Store pem in local storage
                 KeySotre.setPublicKey(username, publicKeyPem);
-                KeySotre.setPrivateKey(privateKeyPem);
+                KeySotre.setPrivateKey(username, privateKeyPem);
             }
         },
 
@@ -123,7 +123,7 @@ $(document).ready(function () {
             var conversation = {
                 id: data.conversation_id,
                 body: ko.observable(''),
-                password: self.new_conversation_password()
+                password: forge.random.getBytesSync(16)
             }
             self.conversations.push(conversation);
             _conversations[data.conversation_id] = self.conversations().length-1;
@@ -170,6 +170,14 @@ $(document).ready(function () {
 
         self.addConversation = function() {
             socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
+        }
+
+        self.inviteUser = function() {
+            //TODO set conversation id
+            socket.emit('invite_user', {
+                username: self.invite_user_field(),
+                conversation_id: conversation.id
+            });
         }
 
         self.sendMessage = function(conversation) {
