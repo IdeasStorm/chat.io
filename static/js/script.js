@@ -180,10 +180,6 @@ $(document).ready(function () {
             });
         }
 
-        self.changename = function() {
-            socket.emit('name_change', {username: self.username()})
-        }
-
         self.sendMessage = function(conversation) {
             socket.emit('message', {
                 conversation_id: conversation.id,
