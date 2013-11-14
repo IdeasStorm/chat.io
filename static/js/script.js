@@ -123,7 +123,7 @@ $(document).ready(function () {
             var conversation = {
                 id: data.conversation_id,
                 body: ko.observable(''),
-                password: self.new_conversation_password()
+                password: forge.random.getBytesSync(16)
             }
             self.conversations.push(conversation);
             _conversations[data.conversation_id] = self.conversations().length-1;
@@ -170,6 +170,14 @@ $(document).ready(function () {
 
         self.addConversation = function() {
             socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
+        }
+
+        self.inviteUser = function() {
+            //TODO set conversation id
+            socket.emit('invite_user', {
+                username: self.invite_user_field(),
+                conversation_id: conversation.id
+            });
         }
 
         self.changename = function() {
