@@ -2,7 +2,9 @@ var mongoose = require('mongoose'),
     Schema = mongoose.Schema,
     passportLocalMongoose = require('passport-local-mongoose');
 
-var User = new Schema({});
+var User = new Schema({
+    socket_id: Number
+});
 User.post('init', function() {
     this.conversations = [];
 })
@@ -10,28 +12,36 @@ User.post('init', function() {
 User.plugin(passportLocalMongoose);
 
 var model = mongoose.model('User', User);
+var sockets = [];
+
+model.prototype.socket = function() {
+    return sockets[this.socket_id];
+}
 
 model.prototype.send = function (signal, data) {
     if (!this.isOnline()) throw "User is not online";
-    this.socket.emit(signal, data);
+    this.socket().emit(signal, data);
 }
 
 model.prototype.publish = function (data) {
     this.send('message', data);
 }
 
-model.prototype.isOnline = function (socket) {
-    return Boolean(socket);
+model.prototype.isOnline = function () {
+    return Boolean(this.socket());
 }
 
 model.prototype.setOnline = function (socket, system) {
     this.system = system;
-    this.socket = socket;
+    this.socket_id = sockets.length;
+    sockets.push(socket);
+    this.save();
     this.onOnline();
 }
 
 model.prototype.setOffline = function () {
-    this.socket = null;
+    this.socket_id = null;
+    this.save();
 }
 
 
@@ -45,14 +55,14 @@ model.prototype.getConversations =  function() {
 }
 
 model.prototype.onOnline = function () {
-    var socket = this.socket;
+    var socket = this.socket();
     var system = this.system;
     var self = this;
 
     system.addUser(self);
 
     socket.emit('name_change', {username: self.username});
-    socket.broadcast.emit('new_user', {username: self.id});
+    socket.broadcast.emit('new_user', {username: self.username});
     socket.emit('user_list', {users: system.getUsers()});
     socket.emit('conversation_list', {conversations: self.getConversations()})
 
@@ -90,7 +100,7 @@ model.prototype.onOnline = function () {
             data.cert = certs[data.username];
             socket.emit('cert_response', data);
         } else {
-            User.findOne({username: data.username}, function(err, user) { // let's find the user
+            model.findOne({username: data.username}, function(err, user) { // let's find the user
                 if (user.isOnline()) { // if the user is online
                     user.send('cert_request', data); // request his cert
                     user.on('cert_response', function(certdata){ // waiting for response

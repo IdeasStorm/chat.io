@@ -51,6 +51,8 @@ function ChatBackend(io) {
     }
 
     this.addUser = function(user) {
+        if (users[user.id]) return;
+        users.push(user);
         users[user.id] = user;
     }
 
@@ -63,6 +65,7 @@ function ChatBackend(io) {
     }
 
     this.createConversation = function(id) {
+        //FIXME: dont throw exceptions
         if (conversations[id]) throw "conversation already exists";
         return conversations[id] = new Conversation(id, self);
     }

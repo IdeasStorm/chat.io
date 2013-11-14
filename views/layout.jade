@@ -55,6 +55,11 @@ html.no-js(lang='en')
 
     block footer
 
+    .well
+        a.btn.btn-info(href="/login")="Login"
+        =" "
+        a.btn.btn-default(href="/register")="Register"
+
     footer
       script(defer, src='/socket.io/socket.io.js')
       script(defer, src='/js/jquery-1.10.2.js')

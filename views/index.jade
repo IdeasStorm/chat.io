@@ -12,6 +12,6 @@ block content
                 .tab-pane#A(data-bind="attr: {id: id}")
                     input(type="text", data-bind="value: invite_user_field", placeholder="Invite User", class="col-md-11")
                     button(href="#invite_user", data-bind="click: $root.inviteUser", class="col-md-1")= "Invite"
-                    input(type="text", data-bind="value: $root.new_message_field", class="col-md-11")
+                    input(type="text", data-bind="value: new_message_field", class="col-md-11")
                     button(data-bind="click: $root.sendMessage", class="col-md-1") Send
                     pre(data-bind="text: body") I'm in Section A.

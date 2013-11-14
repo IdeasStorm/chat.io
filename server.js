@@ -5,6 +5,7 @@ var connect = require('connect')
     , passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy
     , MemoryStore = connect.middleware.session.MemoryStore
+    , MongoStore = require('connect-mongo')(express)
     , chat = require('./chat')
     , User = require('./models/user_model')
     , passportSocketIo = require("passport.socketio")
@@ -21,7 +22,9 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-store = new MemoryStore();
+
+store = new MongoStore({db: 'chat_io'});
+//store = new MemoryStore();
 
 //Setup Express
 var server = express.createServer();
