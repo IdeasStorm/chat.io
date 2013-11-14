@@ -172,7 +172,7 @@ $(document).ready(function () {
             socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
         }
 
-        self.inviteUser = function() {
+        self.inviteUser = function(conversation) {
             //TODO set conversation id
             socket.emit('invite_user', {
                 username: self.invite_user_field(),
