@@ -172,10 +172,6 @@ $(document).ready(function () {
             socket.emit('new_conversation', {conversation_id: self.new_conversation_field()});
         }
 
-        self.changename = function() {
-            socket.emit('name_change', {username: self.username()})
-        }
-
         self.sendMessage = function(conversation) {
             socket.emit('message', {
                 conversation_id: conversation.id,
