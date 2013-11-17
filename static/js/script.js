@@ -1,6 +1,7 @@
 /* Author: YOUR NAME HERE
  */
 var socket = io.connect('http://localhost');
+var CAsocket = io.connect('http://localhost:8090');
 var pki = forge.pki;
 
 function makeId()
@@ -43,8 +44,23 @@ var KeyStore = (function () {
         getCert: function (username, callback) {
             var cert = localStorage.getItem(username + 'Cert');
             if (cert == "undefined" || !cert) {
-                socket.emit('cert_request', {username: username, publicKey: KeyStore.getPublicKey(username)});
+                socket.emit('cert_request', {username: username});
                 socket.on('cert_response', function (data) {
+                    if (username == data.username) {
+                        setCert(username, data.cert);
+                        callback(data.cert);
+                    }
+                });
+            } else {
+                callback(cert);
+            }
+        },
+
+        getMyCert: function (username, callback) {
+            var cert = localStorage.getItem(username + 'Cert');
+            if (cert == "undefined" || !cert) {
+                CAsocket.emit('register', {username: username, publicKey: KeyStore.getMyPublicKey(username)});
+                CAsocket.on('register', function (data) {
                     if (username == data.username) {
                         setCert(username, data.cert);
                         callback(data.cert);
@@ -67,7 +83,7 @@ var KeyStore = (function () {
         },
         getPrivateKey: function (username) {
             var privateKeyPem = localStorage.getItem(username + 'Prk');
-            if (privateKeyPem == "undefined") {
+            if (privateKeyPem == "undefined" || !privateKeyPem) {
                 myKeypair = Encryption.generateKeypair(username);
                 return localStorage.getItem(username + 'Prk');
             }
@@ -77,10 +93,24 @@ var KeyStore = (function () {
         },
 
         getPublicKey: function (username) {
-            //TODO to Syrwan
-            //   if localStorage.getItem(username+'Pk') == "undefined"
-            //      get publicKey from Cert
+            var publicKey = localStorage.getItem(username+'Pk');
+            if  (publicKey == "undefined" || publicKey == null) {
+                var cert = KeyStore.getCert(username)
+                publicKey = pki.certificateFromPem(cert).publicKey;
+                localStorage.setItem(username + 'Pk', publicKey);
+                return publicKey;
+            }
             return localStorage.getItem(username + 'Pk');
+        },
+
+        getMyPublicKey: function (username) {
+            var publicKey = localStorage.getItem(username+'Pk');
+            if  (publicKey == "undefined" || publicKey == null) {
+                var keys = Encryption.generateKeypair(username)
+                return keys.publicKey;
+            }
+            else
+                return localStorage.getItem(username + 'Pk');
         }
 
     }
@@ -95,7 +125,7 @@ var Encryption = (function () {
         generateKeypair: function (username) {
             var publicKey = localStorage.getItem(username + 'Pk');
             var privateKey = localStorage.getItem(username + 'Prk');
-            if (publicKey == "undefined" || privateKey == "undefined") {
+            if (publicKey == "undefined" || privateKey == "undefined" || privateKey == null || publicKey == null) {
                 // get rsa
                 var rsa = pki.rsa;
                 // generate an RSA key pair
@@ -185,15 +215,15 @@ $(document).ready(function () {
         })
 
         socket.on('welcome', function(data) {
-            var keys = KeyStore.getKeyPair();
-            data.password = keys.privateKey.decrypt(data.password);
+            var privateKey = KeyStore.getPrivateKey(self.username());
+            data.password = pki.privateKeyFromPem(privateKey).decrypt(data.password);
             var conversation = new Conversation(data.conversation_id, data.password);
             self.conversations.push(conversation);
             _conversations[data.conversation_id] = self.conversations().length - 1;
         })
 
         socket.on('cert_request', function(data) {
-            KeyStore.getCert(self.username, function(cert) {
+            KeyStore.getMyCert(self.username(), function(cert) {
                 data.cert = cert;
                 socket.emit('cert_response', data);
             })

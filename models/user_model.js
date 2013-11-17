@@ -54,6 +54,10 @@ model.prototype.getConversations =  function() {
     return this.conversations.map(function(c) {return {id: c.conversation_id}});
 }
 
+model.prototype.onEvent = function(signal, callback) {
+    this.socket().on(signal, callback);
+}
+
 model.prototype.onOnline = function () {
     var socket = this.socket();
     var system = this.system;
@@ -79,12 +83,12 @@ model.prototype.onOnline = function () {
         socket.emit('new_conversation', {conversation_id: conversation_id});
     })
 
-    socket.on('invite', function (data) {
+    socket.on('invite_user', function (data) {
         var conversation_id = data.conversation_id;
-        var user_id = data.user_id;
+        var user_id = data.username;
         var conversation = system.getConversation(conversation_id);
         if (conversation && conversation.contains(self)) {
-            User.findOne({username: user_id}, function(err, user){
+            model.findOne({username: user_id}, function(err, user){
                 conversation.addUser(user);
                 user.send('welcome', data);
             })
@@ -103,7 +107,7 @@ model.prototype.onOnline = function () {
             model.findOne({username: data.username}, function(err, user) { // let's find the user
                 if (user.isOnline()) { // if the user is online
                     user.send('cert_request', data); // request his cert
-                    user.on('cert_response', function(certdata){ // waiting for response
+                    user.onEvent('cert_response', function(certdata){ // waiting for response
                         certs[data.username] = certdata.cert;
                         socket.emit('cert_response', certdata); // sending the cert back to the user requesting it
                     })

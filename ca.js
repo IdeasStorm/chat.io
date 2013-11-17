@@ -14,36 +14,36 @@ function CA() {
     var mongoose = require('mongoose'),
         Schema = mongoose.Schema;
 
-    var Account = new Schema({
+    var AccountSchema = new Schema({
         publicKey: String
     });
 
-    Account.plugin(passportLocalMongoose);
+    AccountSchema.plugin(passportLocalMongoose);
 
-    var model = mongoose.model('Account', Account);
+    var Account = mongoose.model('Account', AccountSchema);
 
     // GENERTATING CERTIFICATE
     this.keys = pki.rsa.generateKeyPair(2048);
-    this.cert = generateCertificate();
-    this.cert.sign(keys.privateKey);
+    this.cert = generateCertificate(this.keys.publicKey);
+    this.cert.sign(this.keys.privateKey);
     // END GENERATING CERTIFICATE
 
     this.start = function() {
-
+        var self = this;
         // connecting to database
         mongoose.connect('mongodb://localhost/ca');
 
         io.sockets.on('connection', function (socket) {
             socket.on('register', function (data) {
                 // data = {publickey, username, password}
-                var account = new Acount(data);
+                var account = new Account(data);
                 account.save(function(err) {
-                    var cert = generateCertificate(data.publicKey);
-                    cert.sign(this.keys.privateKey);
+                    var cert = generateCertificate(pki.publicKeyFromPem(data.publicKey));
+                    cert.sign(self.keys.privateKey);
                     var pem = pki.certificateToPem(cert);
                     socket.emit('register', {
-                        success : 'true',
-                        certificate: pem
+                        username: data.username,
+                        cert: pem
                     })
                 })
             });
@@ -89,6 +89,6 @@ function generateCertificate(publickey){
     return cert;
 }
 
-
+new CA().start()
 // var privateKey = fs.readFileSync('./../ssl/localhost.key').toString();
 // var certificate = fs.readFileSync('./../ssl/localhost.crt').toString();
