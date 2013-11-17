@@ -181,7 +181,9 @@ $(document).ready(function () {
 
 
         socket.on('name_change', function (data) {
-            self.username(data.username);
+            self.username('Username: '+data.username);
+            $('.login-section').hide();
+            $('.username-section').show();
         })
 
         socket.on('welcome', function(data) {

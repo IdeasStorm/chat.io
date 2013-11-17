@@ -23,15 +23,10 @@ html.no-js(lang='en')
     div.container
       div.row
         div.col-md-3
-          div.well
+          div.well.username-section(style="display: none;")
             ul.nav
               li
-                label= "Username: "
-                .row
-                  .col-md-10
-                    label(data-bind="text: username")
-                  .col-md-2
-                    a.glyphicon.glyphicon-refresh(id='change_username', title='Change username')
+                label(data-bind="text: username") Not Signed in
           div.well
             ul.nav
               li
@@ -55,10 +50,13 @@ html.no-js(lang='en')
 
     block footer
 
-    .well
+    .well.login-section
+      .pull-right
         a.btn.btn-info(href="/login")="Login"
         =" "
         a.btn.btn-default(href="/register")="Register"
+      br
+      br
 
     footer
       script(defer, src='http://localhost:8080/socket.io/socket.io.js')
