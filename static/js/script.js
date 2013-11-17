@@ -1,7 +1,7 @@
 /* Author: YOUR NAME HERE
  */
-var socket = io.connect('http://localhost');
 var CAsocket = io.connect('http://localhost:8090');
+var socket = io.connect('http://localhost:8080');
 var pki = forge.pki;
 
 function makeId()
@@ -211,7 +211,9 @@ $(document).ready(function () {
 
 
         socket.on('name_change', function (data) {
-            self.username(data.username);
+            self.username('Username: '+data.username);
+            $('.login-section').hide();
+            $('.username-section').show();
         })
 
         socket.on('welcome', function(data) {

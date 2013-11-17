@@ -15,7 +15,9 @@
     "passport-local": "*",
     "passport-local-mongoose": "*",
     "passport.socketio": "*",
-    "forge": "~2.1.0"
+    "forge": "~2.1.0",
+    "node-forge": "*",
+    "connect-mongo": "*"
   },
   "devDependencies": {
     "vows": "0.5.x",

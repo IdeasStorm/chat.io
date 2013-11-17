@@ -1,7 +1,7 @@
 //setup Dependencies
 var connect = require('connect')
     , express = require('express')
-    , port = (process.env.PORT || 8081)
+    , port = (process.env.PORT || 8080)
     , passport = require('passport')
     , LocalStrategy = require('passport-local').Strategy
     , MemoryStore = connect.middleware.session.MemoryStore
