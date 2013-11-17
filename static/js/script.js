@@ -1,6 +1,6 @@
 /* Author: YOUR NAME HERE
  */
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://localhost:8080');
 var pki = forge.pki;
 
 function makeId()
