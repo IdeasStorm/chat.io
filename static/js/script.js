@@ -1,7 +1,7 @@
 /* Author: YOUR NAME HERE
  */
-var CAsocket = io.connect('http://localhost:8090');
-var socket = io.connect('http://localhost:8080');
+var CAsocket = io.connect('http://127.0.0.1:8090');
+var socket = io.connect('http://127.0.0.1:8080');
 var pki = forge.pki;
 
 function makeId()

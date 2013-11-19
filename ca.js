@@ -89,6 +89,7 @@ function generateCertificate(publickey){
     return cert;
 }
 
-new CA().start()
+
+module.exports = CA;
 // var privateKey = fs.readFileSync('./../ssl/localhost.key').toString();
 // var certificate = fs.readFileSync('./../ssl/localhost.crt').toString();
