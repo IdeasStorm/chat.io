@@ -10,8 +10,8 @@ block content
                 // /ko
             .tab-content(data-bind="foreach: conversations")
                 .tab-pane#A(data-bind="attr: {id: id}")
-                    input(type="text", data-bind="value: invite_user_field", placeholder="Invite User", class="col-md-11")
-                    button(href="#invite_user", data-bind="click: $root.inviteUser", class="col-md-1")= "Invite"
-                    input(type="text", data-bind="value: new_message_field", class="col-md-11")
-                    button(data-bind="click: $root.sendMessage", class="col-md-1") Send
+                    input(type="text", data-bind="value: invite_user_field", placeholder="Invite User", class="col-md-11 col-sm-10 col-xs-10")
+                    button(href="#invite_user", data-bind="click: $root.inviteUser", class="col-md-1 col-sm-2 col-xs-2")= "Invite"
+                    input(type="text", data-bind="value: new_message_field", class="col-md-11 col-sm-10 col-xs-10")
+                    button(data-bind="click: $root.sendMessage", class="col-md-1 col-sm-2 col-xs-2") Send
                     pre(data-bind="text: body") I'm in Section A.

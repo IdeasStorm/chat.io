@@ -21,31 +21,37 @@ html.no-js(lang='en')
     block header
 
     div.container
-      div.row
-        div.col-md-3
-          div.well.username-section(style="display: none;")
-            ul.nav
-              li
-                label(data-bind="text: username") Not Signed in
-          div.well
-            ul.nav
-              li
-                center(style='font-weight: bold')= "Conversation"
-              li
-                label="Conversation Name: "
-                input(data-bind="value: new_conversation_field", placeholder="Conversation Name", class="col-md-12")
-                br
-                br
-                a(href="#new_tab", data-bind="click: $root.addConversation", class="btn btn-success")= 'New Conversation'
-          div.well
-            center(style='font-weight: bold')= "Users"
-            ul.nav.nav-pills.nav-stacked#user_list(data-bind="foreach: users")
-              li
-                a(data-bind="text: username", href="#start_chat")
+      .tabbable.tabs-above
+        ul.nav.nav-tabs
+          li
+            a(href="#menu", data-toggle="tab") Menues
+          li.active
+            a(href="#content", data-toggle="tab") Content
+        .tab-content
+          .tab-pane(id="menu")
+            div.well.username-section(style="display: none;")
+              ul.nav
+                li
+                  label(data-bind="text: username") Not Signed in
+            div.well
+              ul.nav
+                li
+                  center(style='font-weight: bold')= "Conversation"
+                li
+                  label="Conversation Name: "
+                  input(data-bind="value: new_conversation_field", placeholder="Conversation Name", class="col-md-12 col-sm-12 col-xs-12")
+                  br
+                  br
+                  a(href="#new_tab", data-bind="click: $root.addConversation", class="btn btn-success")= 'New Conversation'
+            div.well
+              center(style='font-weight: bold')= "Users"
+              ul.nav.nav-pills.nav-stacked#user_list(data-bind="foreach: users")
+                li
+                  a(data-bind="text: username", href="#start_chat")
                   i.glyphicon-chevron-right
-                  Overview
-        div.col-md-9
-          block content
+                    Overview
+          .active.tab-pane(id="content")
+            block content
 
 
     block footer
