@@ -258,6 +258,7 @@ $(document).ready(function () {
                 conversation_id: conversation.id,
                 message: self.encrypt(conversation.new_message_field(), conversation.password)
             })
+            conversation.new_message_field("");
         }
 
         self.alerts = ko.observableArray([
